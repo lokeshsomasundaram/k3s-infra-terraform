@@ -27,10 +27,13 @@ pipeline {
             }
         }
 
-        stage('Save kubeconfig') {
+        stage('Use Existing K3s kubeconfig') {
             steps {
-                // Copy kubeconfig from terraform folder and stash it
-                sh 'cp terraform-k3s/kubeconfig ./k3s.yaml'
+                // Copy kubeconfig from the node (existing cluster)
+                sh 'sudo cp /etc/rancher/k3s/k3s.yaml ./k3s.yaml'
+                sh 'sudo chown $(whoami):$(whoami) ./k3s.yaml'
+                
+                // Stash for app pipeline
                 stash includes: 'k3s.yaml', name: 'k3s-config'
             }
         }
@@ -38,7 +41,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Infrastructure applied successfully!'
+            echo '✅ Infrastructure applied successfully (or already exists)!'
         }
         failure {
             echo '❌ Terraform failed!'
