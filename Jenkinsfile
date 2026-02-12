@@ -2,14 +2,16 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        # Direct AWS keys for Terraform
+        AWS_ACCESS_KEY_ID     = 'AKIARMIW3YGZPLBORU7W'
+        AWS_SECRET_ACCESS_KEY = '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'
         AWS_DEFAULT_REGION    = 'ap-south-1'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
+                // SSH Git URL - make sure Jenkins user has SSH key added to GitHub
                 git branch: 'main',
                     url: 'git@github.com:lokeshsomasundaram/k3s-infra-terraform.git'
             }
