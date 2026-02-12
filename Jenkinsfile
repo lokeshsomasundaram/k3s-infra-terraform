@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                    url: 'git@github.com:lokeshsomasundaram/k3s-infra-terraform.git'
+                    url: 'https://github.com/lokeshsomasundaram/k3s-infra-terraform.git'
             }
         }
 
