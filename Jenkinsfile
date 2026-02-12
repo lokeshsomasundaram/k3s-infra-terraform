@@ -17,6 +17,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
+                // Run terraform in root of repo (no terraform-k3s subfolder)
                 sh 'terraform init'
             }
         }
@@ -26,22 +27,11 @@ pipeline {
                 sh 'terraform apply -auto-approve'
             }
         }
-
-        stage('Use Existing K3s kubeconfig') {
-            steps {
-                // Copy kubeconfig from the node (existing cluster)
-                sh 'sudo cp /etc/rancher/k3s/k3s.yaml ./k3s.yaml'
-                sh 'sudo chown $(whoami):$(whoami) ./k3s.yaml'
-                
-                // Stash for app pipeline
-                stash includes: 'k3s.yaml', name: 'k3s-config'
-            }
-        }
     }
 
     post {
         success {
-            echo '✅ Infrastructure applied successfully (or already exists)!'
+            echo '✅ Infrastructure applied successfully!'
         }
         failure {
             echo '❌ Terraform failed!'
