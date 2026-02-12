@@ -17,7 +17,6 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                // Run terraform in root of repo (no terraform-k3s subfolder)
                 sh 'terraform init'
             }
         }
@@ -25,6 +24,14 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 sh 'terraform apply -auto-approve'
+            }
+        }
+
+        stage('Save kubeconfig') {
+            steps {
+                // Copy kubeconfig from terraform folder and stash it
+                sh 'cp terraform-k3s/kubeconfig ./k3s.yaml'
+                stash includes: 'k3s.yaml', name: 'k3s-config'
             }
         }
     }
