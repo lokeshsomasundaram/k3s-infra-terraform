@@ -7,7 +7,7 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  description = "k3s-key.pem"
+  description = "k3s-key"
 }
 
 variable "security_group_id" {
